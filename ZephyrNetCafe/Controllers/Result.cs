@@ -8,6 +8,13 @@ namespace ZephyrNetCafe.Controllers
     public class Result<T>
     {
         public bool IsSuccess { get; set; }
-        private T Data;
+        public string Message;
+        public T Data;
+
+        public Result()
+        {
+            IsSuccess = true;
+            Data = default(T);
+        }
     }
 }

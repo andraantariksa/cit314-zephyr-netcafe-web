@@ -5,31 +5,22 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 
-namespace ZephyrNetCafe.Controllers
+namespace ZephyrNetCafe.Controllers.User
 {
     public class UserRegisterController : Controller
     {
-        private Models.DBContext DBContext;
-
         [HttpPost]
         public JsonResult Post(Models.User user)
         {
-            DBContext.User.Add(user);
             var result = new Result<Models.User>();
             try
             {
-                if (DBContext.SaveChanges() > 0)
-                {
-                    result.IsSuccess = false;
-                }
-                else
-                {
-                    result.IsSuccess = true;
-                }
+                user.Insert();
             }
-            catch (Microsoft.EntityFrameworkCore.DbUpdateException)
+            catch (Models.DBException ex)
             {
                 result.IsSuccess = false;
+                result.Message = ex.Message;
             }
             return Json(result);
         }

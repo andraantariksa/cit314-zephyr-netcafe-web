@@ -5,7 +5,10 @@ using System.Threading.Tasks;
 
 namespace ZephyrNetCafe.Models
 {
-    public class ShopItem
+    public class UserCustomerDuration
     {
+        public long ID;
+        public long UserID;
+        public long Duration;
     }
 }

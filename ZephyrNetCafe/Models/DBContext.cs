@@ -4,16 +4,27 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
+using SqlKata.Execution;
+using System.Data.SqlClient;
+using SqlKata.Compilers;
+
 namespace ZephyrNetCafe.Models
 {
-    public class DBContext : DbContext
+    public sealed class DBContext
     {
-        public DBContext(DbContextOptions<DBContext> options):
-            base(options)
-        {
-        }
+        private static readonly Lazy<DBContext> lazy =
+            new Lazy<DBContext>(() => new DBContext());
 
-        public DbSet<User> User { get; set; }
-        public DbSet<ShopItem> ShopItem { get; set; }
+        public static DBContext Instance { get { return lazy.Value; } }
+
+        public QueryFactory DB;
+
+        private DBContext()
+        {
+            // TODO. Configure this
+            var connection = new SqlConnection("Data Source=MyDb;User Id=User;Password=TopSecret");
+            var compiler = new SqlServerCompiler();
+            DB = new QueryFactory(connection, compiler);
+        }
     }
 }
