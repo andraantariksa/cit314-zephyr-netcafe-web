@@ -14,10 +14,10 @@ namespace ZephyrNetCafe.Models
 
         const string TableName = "item";
 
-        public void Insert()
+        public long Insert()
         {
-            DBContext.Instance.DB.Query(TableName)
-                .Insert(this);
+            return DBContext.Instance.DB.Query(TableName)
+                .InsertGetId<long>(this);
         }
 
         public static void Delete(long key)

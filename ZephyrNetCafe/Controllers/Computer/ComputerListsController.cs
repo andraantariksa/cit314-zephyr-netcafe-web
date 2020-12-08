@@ -6,14 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ZephyrNetCafe.Controllers.Computer
 {
-    public class ViewComputerController : Controller
+    public class ComputerListsController : ControllerBase
     {
-
         [HttpGet]
-        public JsonResult Get()
+        public ActionResult Get()
         {
-
-            return Json(true);
+            return Ok();
         }
     }
 }
