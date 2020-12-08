@@ -8,12 +8,12 @@ namespace ZephyrNetCafe.Controllers
 {
     [ApiController]
     [Route("/")]
-    public class HomeController : Controller
+    public class HomeController : ControllerBase
     {
         [HttpGet]
-        public JsonResult Get()
+        public ActionResult Get()
         {
-            return Json(new { Message = "Nothing to expect here" });
+            return Ok(new { Message = "Nothing to see here" });
         }
     }
 }

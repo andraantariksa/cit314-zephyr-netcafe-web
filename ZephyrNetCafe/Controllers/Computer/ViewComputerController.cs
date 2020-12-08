@@ -12,7 +12,8 @@ namespace ZephyrNetCafe.Controllers.Computer
         [HttpGet]
         public JsonResult Get()
         {
-            
-            return Json();
+
+            return Json(true);
         }
+    }
 }

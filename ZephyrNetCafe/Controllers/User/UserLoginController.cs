@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ZephyrNetCafe.Controllers.User
 {
-    public class LoginController : Controller
+    public class UserLoginController : ControllerBase
     {
+        [ApiController]
+        [Route("/api/user/auth")]
         public class UserLoginField
         {
             public string Username;
@@ -15,23 +18,23 @@ namespace ZephyrNetCafe.Controllers.User
         }
 
         [HttpPost]
-        public JsonResult Post(UserLoginField field)
+        public ActionResult Post(UserLoginField field)
         {
-            var result = new Result<Models.User>();
             try
             {
                 var foundUser = Models.User.GetByUsernameAndPassword(field.Username, field.Password);
                 if (foundUser != null)
                 {
-                    result.Data = foundUser;
+                    return Forbid();
                 }
             }
-            catch (Models.DBException ex)
+            catch (SqlException ex)
             {
-                result.IsSuccess = false;
-                result.Message = ex.Message;
+                return BadRequest(new {
+                    Message = ex.Message
+                });
             }
-            return Json(result);
+            return Ok();
         }
     }
 }

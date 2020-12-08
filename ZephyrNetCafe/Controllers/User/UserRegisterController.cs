@@ -1,28 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
 
 namespace ZephyrNetCafe.Controllers.User
 {
-    public class UserRegisterController : Controller
+    [ApiController]
+    [Route("/api/user")]
+    public class UserRegisterController : ControllerBase
     {
-        [HttpPost]
-        public JsonResult Post(Models.User user)
+        public class UserField
         {
-            var result = new Result<Models.User>();
+            public long ID;
+            public string Name { get; set; }
+            public string Email { get; set; }
+            public string Username { get; set; }
+            public string Password { get;  set; }
+        }
+
+        [HttpPost]
+        public ActionResult<UserField> Post(UserField field)
+        {
             try
             {
-                user.Insert();
+                field.ID = Models.User.Insert(field.Email, field.Name, field.Username, field.Password, Models.User.Roles.User);
             }
-            catch (Models.DBException ex)
+            catch (SqlException ex)
             {
-                result.IsSuccess = false;
-                result.Message = ex.Message;
+                return BadRequest(new {
+                    Message = ex.Message
+                });
             }
-            return Json(result);
+            return CreatedAtAction(nameof(Post), field);
         }
     }
 }

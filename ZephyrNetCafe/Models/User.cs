@@ -20,8 +20,7 @@ namespace ZephyrNetCafe.Models
         public string Name { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-
-        public long Duration { get; set; }
+        public int Duration { get; set; }
         public Roles Role { get; set; }
 
 
@@ -35,36 +34,33 @@ namespace ZephyrNetCafe.Models
                 .SingleOrDefault();
         }
 
-        public void Insert()
+        public static long Insert(string email, string name, string username, string password, Roles role)
         {
-            if (DBContext.Instance.DB.Query(TableName)
-                .Insert(this) == 0)
-            {
-                throw new DBException($"Insertion {TableName} failed");
-            }
+            return DBContext.Instance.DB.Query(TableName)
+                .InsertGetId<long>(new {
+                    Username = username,
+                    Name = name,
+                    Email = email,
+                    Password = password,
+                    Role = (byte)role
+                });
         }
 
         public static void Delete(long key)
         {
-            if (DBContext.Instance.DB.Query(TableName)
+            DBContext.Instance.DB.Query(TableName)
                 .Where(nameof(ID), key)
-                .Delete() == 0)
-            {
-                throw new DBException($"Deletion {TableName} failed");
-            }
+                .Delete();
         }
 
         public static void Update(long key, object data)
         {
-            if (DBContext.Instance.DB.Query(TableName)
+            DBContext.Instance.DB.Query(TableName)
                 .Where(nameof(ID), key)
-                .Update(data) == 0)
-            {
-                throw new DBException($"Update {TableName} failed");
-            }
+                .Update(data);
         }
 
-        public static IEnumerable<User> GetLists(int limit = -1, int offset = -1)
+        public static IEnumerable<User> GetMany(int limit = -1, int offset = -1)
         {
             var query = DBContext.Instance.DB.Query(TableName);
             if (limit >= 0)
@@ -84,11 +80,6 @@ namespace ZephyrNetCafe.Models
                 .Where(nameof(ID), key)
                 .Get<User>()
                 .SingleOrDefault();
-        }
-
-        public static bool IsUserExists(long key)
-        {
-            return GetByKey(key) != null;
         }
     }
 }
