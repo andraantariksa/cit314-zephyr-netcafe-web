@@ -8,19 +8,22 @@ using System.Data.SqlClient;
 namespace ZephyrNetCafe.Controllers.User
 {
     [ApiController]
-    [Route("/api/user/durationadd")]
-    public class UserAddDurationController : ControllerBase
+    [Route("/api/user")]
+    public class UserEditController : ControllerBase
     {
-        public class AddDurationField
+        public class UserEditField
         {
-            public int AddedDuration { get; set; }
             public long UserID { get; set; }
+            public string Name { get; set; }
+            public string Email { get; set; }
+            public string Password { get; set; }
+            public Models.User.Roles Role { get; set; }
             public string AuthUsername { get; set; }
             public string AuthPassword { get; set; }
         }
 
-        [HttpPost]
-        public ActionResult Post(AddDurationField field)
+        [HttpPut]
+        public ActionResult Put(UserEditField field)
         {
             try
             {
@@ -29,7 +32,7 @@ namespace ZephyrNetCafe.Controllers.User
                 {
                     return StatusCode(403);
                 }
-                if (!authUser.IsMinimumStaff())
+                if (!(authUser.IsMinimumStaff() || authUser.ID == field.UserID))
                 {
                     return StatusCode(403);
                 }
@@ -42,8 +45,12 @@ namespace ZephyrNetCafe.Controllers.User
                         Message = "User does not exists"
                     });
                 }
-                Models.User.Update(field.UserID, new {
-                    Duration = user.Duration + field.AddedDuration
+                Models.User.Update(field.UserID, new
+                {
+                    Name = field.Name,
+                    Email = field.Email,
+                    Password = field.Password,
+                    Role = field.Role
                 });
             }
             catch (SqlException ex)
@@ -53,10 +60,7 @@ namespace ZephyrNetCafe.Controllers.User
                     Message = ex.Message
                 });
             }
-            var userAfterUpdated = Models.User.GetByKey(field.UserID);
-            return AcceptedAtAction(nameof(Post), new {
-                TotalDurationNow = userAfterUpdated.Duration
-            });
+            return Ok();
         }
     }
 }

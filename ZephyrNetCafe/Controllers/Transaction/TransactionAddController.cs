@@ -1,26 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using System.Data.SqlClient;
 
-namespace ZephyrNetCafe.Controllers.User
+namespace ZephyrNetCafe.Controllers.Computer
 {
     [ApiController]
-    [Route("/api/user/durationadd")]
-    public class UserAddDurationController : ControllerBase
+    [Route("/api/transaction")]
+    public class TransactionAddController : ControllerBase
     {
-        public class AddDurationField
+        public class TransactionAddField 
         {
-            public int AddedDuration { get; set; }
-            public long UserID { get; set; }
+            public long ItemID;
+            public DateTime CreatedAt;
+            public int Price;
+            public int Quantity;
             public string AuthUsername { get; set; }
-            public string AuthPassword { get; set; }
         }
 
         [HttpPost]
-        public ActionResult Post(AddDurationField field)
+        public ActionResult Post(TransactionAddField field)
         {
             try
             {
@@ -34,17 +35,21 @@ namespace ZephyrNetCafe.Controllers.User
                     return StatusCode(403);
                 }
 
-                var user = Models.User.GetByKey(field.UserID);
-                if (user == null)
+                var item = Models.Item.GetByKey(field.ItemID);
+                if (item == null)
                 {
                     return BadRequest(new
                     {
-                        Message = "User does not exists"
+                        Message = "Item does not exists"
                     });
                 }
-                Models.User.Update(field.UserID, new {
-                    Duration = user.Duration + field.AddedDuration
-                });
+
+                var transaction = new Models.Transaction();
+                transaction.Price = item.Price;
+                transaction.Quantity = field.Quantity;
+                transaction.ItemID = field.ItemID;
+                transaction.UserID = authUser.ID;
+                transaction.CreatedAt = DateTime.Now;
             }
             catch (SqlException ex)
             {
@@ -53,10 +58,7 @@ namespace ZephyrNetCafe.Controllers.User
                     Message = ex.Message
                 });
             }
-            var userAfterUpdated = Models.User.GetByKey(field.UserID);
-            return AcceptedAtAction(nameof(Post), new {
-                TotalDurationNow = userAfterUpdated.Duration
-            });
+            return Ok();
         }
     }
 }

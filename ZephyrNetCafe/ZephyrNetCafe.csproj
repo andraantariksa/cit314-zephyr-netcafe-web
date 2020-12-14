@@ -5,14 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Controllers\ShopItem\NewFile.txt" />
+    <None Remove="Controllers\ShopItem\ShopItemStockController" />
+    <None Remove="Controllers\Transaction\NewFile.txt" />
+    <None Remove="Controllers\User\NewFile.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.0" />
     <PackageReference Include="SqlKata" Version="2.2.0" />
     <PackageReference Include="SqlKata.Execution" Version="2.2.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\Transaction\" />
   </ItemGroup>
 
 

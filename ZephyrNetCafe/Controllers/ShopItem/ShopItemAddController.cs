@@ -9,20 +9,20 @@ namespace ZephyrNetCafe.Controllers.ShopItem
 {
     [ApiController]
     [Route("/api/shop/order")]
-    public class ShopItemOrderController : ControllerBase
+    public class ShopItemAddController : ControllerBase
     {
-        public class ShopItemOrderField
+        public class ShopItemAddField
         {
-            public long ProductID { get; set; }
+            public string Name { get; set; }
             public string AuthUsername { get; set; }
+            public long Price { get; set; }
+            public int Quantity { get; set; }
             public string AuthPassword { get; set; }
         }
 
         [HttpPost]
-        public ActionResult Post(ShopItemOrderField field)
+        public ActionResult Post(ShopItemAddField field)
         {
-            // TODO
-            // Add transaction
             try
             {
                 var authUser = Models.User.GetByUsernameAndPassword(field.AuthUsername, field.AuthPassword);
@@ -30,32 +30,17 @@ namespace ZephyrNetCafe.Controllers.ShopItem
                 {
                     return StatusCode(403);
                 }
-                if (!authUser.IsMinimumStaff())
+                if (!authUser.IsMinimumAdmin())
                 {
                     return StatusCode(403);
                 }
 
-                var item = Models.Item.GetByKey(field.ProductID);
-                if (item == null)
-                {
-                    return BadRequest(new
-                    {
-                        Message = "Item does not exists"
-                    });
-                }
-
-                if (item.Quantity <= 0)
-                {
-                    return BadRequest(new
-                    {
-                        Message = "No quantity left"
-                    });
-                }
-
-                Models.Item.Update(field.ProductID, new
-                {
-                    Quantity = item.Quantity - 1
-                });
+                // Add transaction
+                var item = new Models.Item();
+                item.Name = field.Name;
+                item.Price = field.Price;
+                item.Quantity = field.Quantity;
+                item.Insert();
             }
             catch (SqlException ex)
             {

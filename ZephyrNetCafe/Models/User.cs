@@ -12,7 +12,7 @@ namespace ZephyrNetCafe.Models
         {
             Admin = 0,
             Staff = 1,
-            User = 2
+            Customer = 2
         };
 
         public long ID { get; set; }
@@ -25,13 +25,14 @@ namespace ZephyrNetCafe.Models
 
 
         public const string TableName = "user";
+
         public static User GetByUsernameAndPassword(string username, string password)
         {
             return DBContext.Instance.DB.Query(TableName)
                 .Where(nameof(Username), username)
                 .Where(nameof(Password), password)
                 .Get<User>()
-                .SingleOrDefault();
+                .FirstOrDefault();
         }
 
         public static long Insert(string email, string name, string username, string password, Roles role)
@@ -46,12 +47,13 @@ namespace ZephyrNetCafe.Models
                 });
         }
 
+        /*
         public static void Delete(long key)
         {
             DBContext.Instance.DB.Query(TableName)
                 .Where(nameof(ID), key)
                 .Delete();
-        }
+        }*/
 
         public static void Update(long key, object data)
         {
@@ -80,6 +82,24 @@ namespace ZephyrNetCafe.Models
                 .Where(nameof(ID), key)
                 .Get<User>()
                 .SingleOrDefault();
+        }
+
+        public static User GetByUsername(string username)
+        {
+            return DBContext.Instance.DB.Query(TableName)
+                .Where(nameof(Username), username)
+                .Get<User>()
+                .SingleOrDefault();
+        }
+
+        public bool IsMinimumAdmin()
+        {
+            return Role <= Roles.Admin;
+        }
+
+        public bool IsMinimumStaff()
+        {
+            return Role <= Roles.Staff;
         }
     }
 }

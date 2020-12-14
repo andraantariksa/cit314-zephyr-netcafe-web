@@ -9,20 +9,20 @@ namespace ZephyrNetCafe.Controllers.ShopItem
 {
     [ApiController]
     [Route("/api/shop/order")]
-    public class ShopItemOrderController : ControllerBase
+    public class ShopItemEditController : ControllerBase
     {
-        public class ShopItemOrderField
+        public class ShopItemEditField
         {
             public long ProductID { get; set; }
+            public string Name { get; set; }
             public string AuthUsername { get; set; }
+            public long Price { get; set; }
             public string AuthPassword { get; set; }
         }
 
         [HttpPost]
-        public ActionResult Post(ShopItemOrderField field)
+        public ActionResult Post(ShopItemEditField field)
         {
-            // TODO
-            // Add transaction
             try
             {
                 var authUser = Models.User.GetByUsernameAndPassword(field.AuthUsername, field.AuthPassword);
@@ -30,31 +30,14 @@ namespace ZephyrNetCafe.Controllers.ShopItem
                 {
                     return StatusCode(403);
                 }
-                if (!authUser.IsMinimumStaff())
+                if (!authUser.IsMinimumAdmin())
                 {
                     return StatusCode(403);
                 }
-
-                var item = Models.Item.GetByKey(field.ProductID);
-                if (item == null)
-                {
-                    return BadRequest(new
-                    {
-                        Message = "Item does not exists"
-                    });
-                }
-
-                if (item.Quantity <= 0)
-                {
-                    return BadRequest(new
-                    {
-                        Message = "No quantity left"
-                    });
-                }
-
                 Models.Item.Update(field.ProductID, new
                 {
-                    Quantity = item.Quantity - 1
+                    Name = field.Name,
+                    Price = field.Price
                 });
             }
             catch (SqlException ex)

@@ -26,7 +26,7 @@ namespace ZephyrNetCafe.Controllers.User
         {
             try
             {
-                field.ID = Models.User.Insert(field.Email, field.Name, field.Username, field.Password, Models.User.Roles.User);
+                field.ID = Models.User.Insert(field.Email, field.Name, field.Username, field.Password, Models.User.Roles.Customer);
             }
             catch (SqlException ex)
             {
@@ -34,7 +34,7 @@ namespace ZephyrNetCafe.Controllers.User
                     Message = ex.Message
                 });
             }
-            return CreatedAtAction(nameof(Post), field);
+            return Ok();
         }
     }
 }

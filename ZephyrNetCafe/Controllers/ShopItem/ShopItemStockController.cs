@@ -8,21 +8,20 @@ using Microsoft.AspNetCore.Mvc;
 namespace ZephyrNetCafe.Controllers.ShopItem
 {
     [ApiController]
-    [Route("/api/shop/order")]
-    public class ShopItemOrderController : ControllerBase
+    [Route("/api/shop/stock")]
+    public class ShopItemStockController : ControllerBase
     {
-        public class ShopItemOrderField
+        public class ShopItemStockField
         {
             public long ProductID { get; set; }
+            public int Quantity { get; set; }
             public string AuthUsername { get; set; }
             public string AuthPassword { get; set; }
         }
 
         [HttpPost]
-        public ActionResult Post(ShopItemOrderField field)
+        public ActionResult Post(ShopItemStockField field)
         {
-            // TODO
-            // Add transaction
             try
             {
                 var authUser = Models.User.GetByUsernameAndPassword(field.AuthUsername, field.AuthPassword);
@@ -30,31 +29,13 @@ namespace ZephyrNetCafe.Controllers.ShopItem
                 {
                     return StatusCode(403);
                 }
-                if (!authUser.IsMinimumStaff())
+                if (!authUser.IsMinimumAdmin())
                 {
                     return StatusCode(403);
                 }
-
-                var item = Models.Item.GetByKey(field.ProductID);
-                if (item == null)
-                {
-                    return BadRequest(new
-                    {
-                        Message = "Item does not exists"
-                    });
-                }
-
-                if (item.Quantity <= 0)
-                {
-                    return BadRequest(new
-                    {
-                        Message = "No quantity left"
-                    });
-                }
-
                 Models.Item.Update(field.ProductID, new
                 {
-                    Quantity = item.Quantity - 1
+                    Quantity = field.Quantity
                 });
             }
             catch (SqlException ex)

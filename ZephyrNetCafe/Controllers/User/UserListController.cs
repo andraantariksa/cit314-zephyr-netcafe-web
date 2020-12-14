@@ -9,7 +9,7 @@ namespace ZephyrNetCafe.Controllers.User
 {
     [ApiController]
     [Route("/api/user")]
-    public class UserListsController: ControllerBase
+    public class UserListController: ControllerBase
     {
         [HttpGet]
         public ActionResult<IEnumerable<Models.User>> Get()

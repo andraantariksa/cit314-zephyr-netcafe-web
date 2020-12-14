@@ -8,11 +8,13 @@ namespace ZephyrNetCafe.Models
 {
     public class Item
     {
-        public long ID;
-        public string Name;
-        public long Price;
+        public long ID { get; set; }
+        public string Name { get; set; }
+        public int Price { get; set; }
+        public int Quantity { get; set; }
+        public byte IsDeleted { get; set; }
 
-        const string TableName = "item";
+        const string TableName = "Item";
 
         public long Insert()
         {
@@ -20,14 +22,7 @@ namespace ZephyrNetCafe.Models
                 .InsertGetId<long>(this);
         }
 
-        public static void Delete(long key)
-        {
-            DBContext.Instance.DB.Query(TableName)
-                .Where(nameof(ID), key)
-                .Delete();
-        }
-
-        public void Update(long key, object data)
+        public static void Update(long key, object data)
         {
             DBContext.Instance.DB.Query(TableName)
                 .Where(nameof(ID), key)
@@ -48,12 +43,26 @@ namespace ZephyrNetCafe.Models
             return query.Get<User>();
         }
 
-        public static User GetByKey(long key)
+        public static Item GetByKey(long key)
         {
             return DBContext.Instance.DB.Query(TableName)
                 .Where(nameof(ID), key)
-                .Get<User>()
+                .Get<Item>()
                 .SingleOrDefault();
+        }
+
+        public static IEnumerable<Item> GetMany(int limit = -1, int offset = -1)
+        {
+            var query = DBContext.Instance.DB.Query(TableName);
+            if (limit >= 0)
+            {
+                query = query.Limit(limit);
+            }
+            if (offset >= 0)
+            {
+                query = query.Offset(offset);
+            }
+            return query.Get<Item>();
         }
     }
 }

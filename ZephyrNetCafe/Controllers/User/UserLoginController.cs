@@ -7,14 +7,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ZephyrNetCafe.Controllers.User
 {
+    [ApiController]
+    [Route("/api/user/auth")]
     public class UserLoginController : ControllerBase
     {
-        [ApiController]
-        [Route("/api/user/auth")]
         public class UserLoginField
         {
-            public string Username;
-            public string Password;
+            public string Username { set; get; }
+            public string Password { set; get; }
         }
 
         [HttpPost]
@@ -23,9 +23,9 @@ namespace ZephyrNetCafe.Controllers.User
             try
             {
                 var foundUser = Models.User.GetByUsernameAndPassword(field.Username, field.Password);
-                if (foundUser != null)
+                if (foundUser == null)
                 {
-                    return Forbid();
+                    return StatusCode(403);
                 }
             }
             catch (SqlException ex)
