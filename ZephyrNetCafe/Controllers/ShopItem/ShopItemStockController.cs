@@ -25,11 +25,7 @@ namespace ZephyrNetCafe.Controllers.ShopItem
             try
             {
                 var authUser = Models.User.GetByUsernameAndPassword(field.AuthUsername, field.AuthPassword);
-                if (authUser == null)
-                {
-                    return StatusCode(403);
-                }
-                if (!authUser.IsMinimumAdmin())
+                if (authUser == null || !authUser.IsMinimumAdmin())
                 {
                     return StatusCode(403);
                 }

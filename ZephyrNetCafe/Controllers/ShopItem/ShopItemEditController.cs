@@ -8,20 +8,20 @@ using Microsoft.AspNetCore.Mvc;
 namespace ZephyrNetCafe.Controllers.ShopItem
 {
     [ApiController]
-    [Route("/api/shop/order")]
+    [Route("/api/shop")]
     public class ShopItemEditController : ControllerBase
     {
         public class ShopItemEditField
         {
             public long ProductID { get; set; }
             public string Name { get; set; }
-            public string AuthUsername { get; set; }
             public long Price { get; set; }
+            public string AuthUsername { get; set; }
             public string AuthPassword { get; set; }
         }
 
-        [HttpPost]
-        public ActionResult Post(ShopItemEditField field)
+        [HttpPut]
+        public ActionResult Put(ShopItemEditField field)
         {
             try
             {

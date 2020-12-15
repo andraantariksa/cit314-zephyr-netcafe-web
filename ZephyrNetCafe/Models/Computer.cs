@@ -8,10 +8,10 @@ namespace ZephyrNetCafe.Models
 {
     public class Computer
     {
-        public long ID;
-        public string Name;
-        public string Spec;
-        public byte IsDeleted;
+        public long ID { set; get; }
+        public string Name { set; get; }
+        public string Spec { set; get; }
+        public byte IsDeleted { set; get; }
 
         const string TableName = "Computer";
 

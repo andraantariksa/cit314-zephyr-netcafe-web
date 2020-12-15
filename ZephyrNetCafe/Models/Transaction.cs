@@ -10,17 +10,18 @@ namespace ZephyrNetCafe.Models
     {
         public long ID;
         public long UserID;
-        public long ItemID;
         public DateTime CreatedAt;
-        public int Price;
-        public int Quantity;
 
         const string TableName = "Transaction";
 
-        public long Insert()
+        public void Insert()
         {
-            return DBContext.Instance.DB.Query(TableName)
-                .InsertGetId<long>(this);
+            ID = DBContext.Instance.DB.Query(TableName)
+                .InsertGetId<long>(new
+                {
+                    UserID,
+                    CreatedAt
+                });
         }
 
         public static IEnumerable<Transaction> GetMany(int limit = -1, int offset = -1)
@@ -35,6 +36,13 @@ namespace ZephyrNetCafe.Models
                 query = query.Offset(offset);
             }
             return query.Get<Transaction>();
+        }
+
+        public static IEnumerable<Transaction> GetManyForUserID(long userID)
+        {
+            return DBContext.Instance.DB.Query(TableName)
+                .Where(nameof(UserID), userID)
+                .Get<Transaction>();
         }
     }
 }

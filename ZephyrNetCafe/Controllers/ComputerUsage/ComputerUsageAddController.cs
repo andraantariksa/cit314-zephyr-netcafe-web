@@ -32,6 +32,7 @@ namespace ZephyrNetCafe.Controllers.ComputerUsage
             }
             catch (SqlException ex)
             {
+                Console.WriteLine(ex.Message);
                 return BadRequest(new
                 {
                     Message = ex.Message

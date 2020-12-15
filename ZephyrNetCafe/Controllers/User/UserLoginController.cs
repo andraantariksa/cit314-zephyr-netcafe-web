@@ -20,9 +20,10 @@ namespace ZephyrNetCafe.Controllers.User
         [HttpPost]
         public ActionResult Post(UserLoginField field)
         {
+            Models.User foundUser;
             try
             {
-                var foundUser = Models.User.GetByUsernameAndPassword(field.Username, field.Password);
+                foundUser = Models.User.GetByUsernameAndPassword(field.Username, field.Password);
                 if (foundUser == null)
                 {
                     return StatusCode(403);
@@ -34,7 +35,7 @@ namespace ZephyrNetCafe.Controllers.User
                     Message = ex.Message
                 });
             }
-            return Ok();
+            return Ok(foundUser);
         }
     }
 }

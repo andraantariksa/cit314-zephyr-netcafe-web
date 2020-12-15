@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ZephyrNetCafe.Controllers.ShopItem
 {
     [ApiController]
-    [Route("/api/shop/order")]
+    [Route("/api/shop")]
     public class ShopItemDeleteController : ControllerBase
     {
         public class ShopItemDeleteField
@@ -24,11 +24,7 @@ namespace ZephyrNetCafe.Controllers.ShopItem
             try
             {
                 var authUser = Models.User.GetByUsernameAndPassword(field.AuthUsername, field.AuthPassword);
-                if (authUser == null)
-                {
-                    return StatusCode(403);
-                }
-                if (!authUser.IsMinimumStaff())
+                if (authUser == null || !authUser.IsMinimumStaff())
                 {
                     return StatusCode(403);
                 }

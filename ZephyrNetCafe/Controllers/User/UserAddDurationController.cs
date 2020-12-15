@@ -22,14 +22,12 @@ namespace ZephyrNetCafe.Controllers.User
         [HttpPost]
         public ActionResult Post(AddDurationField field)
         {
+            int oldDuration;
+            int newDuration;
             try
             {
                 var authUser = Models.User.GetByUsernameAndPassword(field.AuthUsername, field.AuthPassword);
-                if (authUser == null)
-                {
-                    return StatusCode(403);
-                }
-                if (!authUser.IsMinimumStaff())
+                if (authUser == null || !authUser.IsMinimumStaff())
                 {
                     return StatusCode(403);
                 }
@@ -42,9 +40,12 @@ namespace ZephyrNetCafe.Controllers.User
                         Message = "User does not exists"
                     });
                 }
+                oldDuration = user.Duration;
                 Models.User.Update(user.ID, new {
                     Duration = user.Duration + field.AddedDuration
                 });
+                user = Models.User.GetByUsername(field.UserUsername);
+                newDuration = user.Duration;
             }
             catch (SqlException ex)
             {
@@ -53,7 +54,11 @@ namespace ZephyrNetCafe.Controllers.User
                     Message = ex.Message
                 });
             }
-            return Ok();
+            return Ok(new
+            {
+                OldDuration = oldDuration,
+                NewDuration = newDuration
+            });
         }
     }
 }

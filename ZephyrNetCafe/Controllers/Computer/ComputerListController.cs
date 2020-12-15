@@ -11,14 +11,8 @@ namespace ZephyrNetCafe.Controllers.Computer
     [Route("/api/computer")]
     public class ComputerListController : ControllerBase
     {
-        public class ComputerListField
-        {
-            public string AuthUsername { get; set; }
-            public string AuthPassword { get; set; }
-        }
-
         [HttpGet]
-        public ActionResult Get(ComputerListField field)
+        public ActionResult Get()
         {
             IEnumerable<Models.Computer> foundComputers;
             try
@@ -32,7 +26,7 @@ namespace ZephyrNetCafe.Controllers.Computer
                     Message = ex.Message
                 });
             }
-            return Ok(foundComputers.Where((computer) => computer.IsDeleted == 1));
+            return Ok(foundComputers.Where((computer) => computer.IsDeleted == 0));
         }
     }
 }

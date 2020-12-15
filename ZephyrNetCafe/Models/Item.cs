@@ -16,9 +16,9 @@ namespace ZephyrNetCafe.Models
 
         const string TableName = "Item";
 
-        public long Insert()
+        public void Insert()
         {
-            return DBContext.Instance.DB.Query(TableName)
+            ID = DBContext.Instance.DB.Query(TableName)
                 .InsertGetId<long>(this);
         }
 

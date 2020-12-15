@@ -24,6 +24,7 @@ namespace ZephyrNetCafe.Controllers.ComputerUsage
                 var computerUsage = Models.ComputerUsage.GetByKey(field.ComputerUsageID);
                 if (computerUsage == null)
                 {
+                    Console.WriteLine("Computer usage does not exists");
                     return BadRequest(new
                     {
                         Message = "Computer usage does not exists"
@@ -37,6 +38,7 @@ namespace ZephyrNetCafe.Controllers.ComputerUsage
             }
             catch (SqlException ex)
             {
+                Console.WriteLine(ex.Message);
                 return BadRequest(new
                 {
                     Message = ex.Message

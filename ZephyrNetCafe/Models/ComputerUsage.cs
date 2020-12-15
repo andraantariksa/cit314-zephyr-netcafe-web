@@ -19,7 +19,13 @@ namespace ZephyrNetCafe.Models
         public long Insert()
         {
             return DBContext.Instance.DB.Query(TableName)
-                .InsertGetId<long>(this);
+                .InsertGetId<long>(new
+                {
+                    UserID,
+                    ComputerID,
+                    EndDateTime,
+                    StartDateTime
+                });
         }
 
         public static ComputerUsage GetByKey(long key)
@@ -44,15 +50,15 @@ namespace ZephyrNetCafe.Models
                 ComputerUsage ON ComputerUsage.ComputerID = Computer.ID
                 WHERE GETDATE() <= DATEADD(MINUTE, 3, ComputerUsage.EndDateTime)";*/
             return DBContext.Instance.DB.Query("Computer")
-                .SelectRaw(@"Computer.ID as ComputerID, Computer.Name as ComputerName, Computer.Spec as ComputerSpec,
-                            Computer.IsDeleted as ComputerIsDeleted, ComputerUsage.ID as ComputerUsageID,
-                            ComputerUsageUserID as ComputerUsage.UserID, ComputerUsage.ComputerID as ComputerUsageComputerID,
-                            ComputerUsage.EndDateTime as ComputerUsageEndDateTime, ComputerUsage.StartDateTime as ComputerUsageStartDateTime")
                 .LeftJoin(
-                    new SqlKata.Query("ComputerUsage"),
+                    new SqlKata.Query("ComputerUsage").As("ComputerUsage"),
                     (joinedTable) => joinedTable.On("ComputerUsage.ComputerID", "Computer.ID")
                 )
                 .WhereRaw("GETDATE() <= DATEADD(MINUTE, 3, ComputerUsage.EndDateTime)")
+                .SelectRaw(@"Computer.ID as ComputerID, Computer.Name as ComputerName, Computer.Spec as ComputerSpec,
+                            Computer.IsDeleted as ComputerIsDeleted, ComputerUsage.ID as ComputerUsageID,
+                            ComputerUsage.UserID as ComputerUsageUserID, ComputerUsage.ComputerID as ComputerUsageComputerID,
+                            ComputerUsage.EndDateTime as ComputerUsageEndDateTime, ComputerUsage.StartDateTime as ComputerUsageStartDateTime")
                 .Get<ComputerUsageAndComputer>();
         }
     }

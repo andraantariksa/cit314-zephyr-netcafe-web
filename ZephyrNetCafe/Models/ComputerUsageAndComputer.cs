@@ -8,14 +8,14 @@ namespace ZephyrNetCafe.Models
 {
     public class ComputerUsageAndComputer
     {
-        public long ComputerID;
-        public string ComputerName;
-        public string ComputerSpec;
-        public byte ComputerIsDeleted;
-        public long ComputerUsageID;
-        public long ComputerUsageUserID;
-        public long ComputerUsageComputerID;
-        public DateTime ComputerUsageEndDateTime;
-        public DateTime ComputerUsageStartDateTime;
+        public long ComputerID { get; set; }
+        public string ComputerName { get; set; }
+        public string ComputerSpec { get; set; }
+        public byte ComputerIsDeleted { get; set; }
+        public long ComputerUsageID { get; set; }
+        public long ComputerUsageUserID { get; set; }
+        public long ComputerUsageComputerID { get; set; }
+        public DateTime ComputerUsageEndDateTime { get; set; }
+        public DateTime ComputerUsageStartDateTime { get; set; }
     }
 }
