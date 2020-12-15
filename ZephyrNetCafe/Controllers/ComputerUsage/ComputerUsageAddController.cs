@@ -13,10 +13,8 @@ namespace ZephyrNetCafe.Controllers.ComputerUsage
     {
         public class ComputerUsageAddField
         {
-            public long UserID;
-            public long ComputerID;
-            public DateTime EndDateTime;
-            public DateTime StartDateTime;
+            public long UserID { get; set; }
+            public long ComputerID { get; set; }
         }
 
         [HttpPost]

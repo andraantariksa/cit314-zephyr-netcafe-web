@@ -14,7 +14,7 @@ namespace ZephyrNetCafe.Controllers.User
         public class AddDurationField
         {
             public int AddedDuration { get; set; }
-            public long UserID { get; set; }
+            public string UserUsername { get; set; }
             public string AuthUsername { get; set; }
             public string AuthPassword { get; set; }
         }
@@ -34,7 +34,7 @@ namespace ZephyrNetCafe.Controllers.User
                     return StatusCode(403);
                 }
 
-                var user = Models.User.GetByKey(field.UserID);
+                var user = Models.User.GetByUsername(field.UserUsername);
                 if (user == null)
                 {
                     return BadRequest(new
@@ -42,7 +42,7 @@ namespace ZephyrNetCafe.Controllers.User
                         Message = "User does not exists"
                     });
                 }
-                Models.User.Update(field.UserID, new {
+                Models.User.Update(user.ID, new {
                     Duration = user.Duration + field.AddedDuration
                 });
             }
@@ -53,10 +53,7 @@ namespace ZephyrNetCafe.Controllers.User
                     Message = ex.Message
                 });
             }
-            var userAfterUpdated = Models.User.GetByKey(field.UserID);
-            return AcceptedAtAction(nameof(Post), new {
-                TotalDurationNow = userAfterUpdated.Duration
-            });
+            return Ok();
         }
     }
 }
