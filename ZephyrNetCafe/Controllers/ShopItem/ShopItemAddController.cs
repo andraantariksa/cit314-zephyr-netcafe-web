@@ -15,7 +15,7 @@ namespace ZephyrNetCafe.Controllers.ShopItem
         {
             public string Name { get; set; }
             public string AuthUsername { get; set; }
-            public long Price { get; set; }
+            public int Price { get; set; }
             public int Quantity { get; set; }
             public string AuthPassword { get; set; }
         }

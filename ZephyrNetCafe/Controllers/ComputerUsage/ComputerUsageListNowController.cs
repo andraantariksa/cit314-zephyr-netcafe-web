@@ -26,7 +26,7 @@ namespace ZephyrNetCafe.Controllers.ComputerUsage
                     Message = ex.Message
                 });
             }
-            return Ok(foundComputerUsageNow));
+            return Ok(foundComputerUsageNow);
         }
     }
 }

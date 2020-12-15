@@ -14,10 +14,10 @@ namespace ZephyrNetCafe.Controllers.Computer
         public class TransactionAddField 
         {
             public long ItemID;
-            public DateTime CreatedAt;
             public int Price;
             public int Quantity;
             public string AuthUsername { get; set; }
+            public string AuthPassword { get; set; }
         }
 
         [HttpPost]
